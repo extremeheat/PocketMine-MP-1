@@ -128,8 +128,18 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --prefer-dist --no-interaction
 
-      - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
+      - name: Make PHAR
+        run: php composer.phar make-server
+
+      - name: Upload PHAR
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: PocketMine.phar
+          path: ${{ github.workspace }}/*.phar
+
+#       - name: Run PHPUnit tests
+#         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
 
   integration:
     name: Integration tests
